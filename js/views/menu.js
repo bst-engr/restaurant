@@ -9,12 +9,11 @@ var MenuView = Backbone.View.extend({
 
 	template: Handlebars.compile(
 		'<ul>' + 
-		'{{#each models}}<li>{{attributes.name}}</li>{{/each}}' +
+		'{{#each models}}<li><a href="#/orders/{{attributes.url}}">{{attributes.name}}</a></li>{{/each}}' +
 		'</ul>'
 	),
 
 	render: function () {
-		console.log(this.collection)
 		this.$el.html(this.template(this.collection));
 		return this;
 	}

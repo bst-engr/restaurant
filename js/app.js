@@ -3,12 +3,19 @@ var AppRouter = Backbone.Router.extend({
 		"": "list",
 		"menu-items/new": "itemForm",
 		"menu-items/:item": "itemDetails",
-		"categories/:category": "categoryDetails"
+		"categories/:category": "categoryDetails",
+		"orders/:item" : "orderItem"
 	},
 	
 	initialize: function  () {
 		this.menuItems = new MenuItems();
 		this.menuItems.fetch();
+
+		this.orderedItems = new MenuItems();
+
+		this.ordersView = new OrdersView({collection: this.orderedItems});
+
+		this.menuItemForm = new MenuItemForm({model: new MenuItem()});
 
 		this.menuItemModel = new MenuItem();
 		this.menuItemView = new MenuItemDetails(
@@ -37,7 +44,7 @@ var AppRouter = Backbone.Router.extend({
 
 	itemForm: function () {
 		
-		$("#app").html("item Form");
+		$('#app').html(this.menuItemForm.render().el);
 	},
 
 	categoryDetails: function  (category) {
@@ -46,9 +53,18 @@ var AppRouter = Backbone.Router.extend({
 	},
 
 	itemDetails: function (item) {
+		console.log(this.menuItems.get(item));
 		this.menuItemView.model = this.menuItems.get(item);
+		
 		$('#app').html(this.menuItemView.render().el);
-	}
+	},
+
+	orderItem: function (item) {
+		var menuItem = this.menuItems.get(item);
+		this.orderedItems.add(menuItem);
+
+		$('#app').html(this.ordersView.render().el);
+	},
 });
 
 var app = new AppRouter();
